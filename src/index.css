@@ -1,3 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+textarea:focus {
+  outline: none;
+}
+
+input:focus {
+  outline: none;
+  border: none
+}
+
+button:active :focus{
+  outline: none;
+  border: none;
+}
+
+textarea {
+  overflow: auto;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+:focus{
+  outline: none;
+}
+
+.posts-loading{
+  background: #1e293b;
+  background-image: linear-gradient(to right, #1e293b 0%, #0f172a 20%, #0f172a 40%, #1e293b 100%);
+  background-repeat: no-repeat;
+  
+  animation-duration: 1s;
+  animation-fill-mode: forwards; 
+  animation-iteration-count: infinite;
+  animation-name: placeholderShimmer;
+  animation-timing-function: linear;
+  }
+
+  @keyframes placeholderShimmer {
+    0% {
+      background-position: -468px 0;
+    }
+    
+    100% {
+      background-position: 468px 0; 
+    }
+  }
