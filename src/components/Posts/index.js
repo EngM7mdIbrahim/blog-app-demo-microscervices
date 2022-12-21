@@ -5,7 +5,7 @@ import Post from "../Post";
 const loadingComponent = () => (
   <div className="p-3 gap-4 flex-wrap flex w-full flex-1 justify-center">
     {["x", "x", "x", "x", "x", "x"].map((_) => (
-      <Card className="h-96 posts-loading" />
+      <Card key={crypto.randomUUID()} className="h-96 posts-loading" />
     ))}
   </div>
 );
@@ -16,7 +16,7 @@ function Posts({ posts = [], isLoading = true }) {
     loadingComponent()
   ) : (
     <div className="p-3 gap-4 flex-wrap flex w-full flex-1 justify-center">
-      {posts.map(post=>(<Post writer={post.writer} content={post.content} postedOn={post.postedOn} />))}
+      {posts.map(post=>(<Post key={crypto.randomUUID()} writer={post.writer} content={post.content} postedOn={post.postedOn} />))}
     </div>
   );
 }

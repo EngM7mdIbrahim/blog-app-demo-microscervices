@@ -28,6 +28,11 @@ textarea {
   outline: none;
 }
 
+a:hover{
+  text-decoration: none;
+  text-transform: none;
+}
+
 .posts-loading{
   background: #1e293b;
   background-image: linear-gradient(to right, #1e293b 0%, #0f172a 20%, #0f172a 40%, #1e293b 100%);
