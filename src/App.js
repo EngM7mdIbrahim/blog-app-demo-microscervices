@@ -90,9 +90,17 @@ const App = () => {
     isCommenting: false,
   });
 
-  const handleFecthingPosts = () => {};
+  const handleFecthingPosts = () => {
+    setState(state=>({...state,isGettingPosts: true}))
+    // Logic here!
+    setState(state=>({...state,isGettingPosts: false}))
+  };
 
-  const handlePostingPost = (content) => {};
+  const handlePostingPost = (content) => {
+    setState(state=>({...state,isPosting: true}))
+    // Logic here!
+    setState(state=>({...state,isPosting: false}))
+  };
 
   const handleShowComments = (postID) => {
     setState({
@@ -104,7 +112,9 @@ const App = () => {
   };
 
   const handleCreateComment = (comment, postID) => {
-    
+    setState(state=>({...state,isCommenting: true}))
+    // Logic here!
+    setState(state=>({...state,isCommenting: false}))
   };
 
   const handleHideComments = () => {
