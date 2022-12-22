@@ -10,13 +10,25 @@ const loadingComponent = () => (
   </div>
 );
 
-function Posts({ posts = [], isLoading = true }) {
-  console.log('Posts:', posts)
-  return isLoading  ? (
+function Posts({
+  posts = [],
+  isLoading = true,
+  handleShowComments = (id) => {},
+}) {
+  console.log("Posts:", posts);
+  return isLoading ? (
     loadingComponent()
   ) : (
     <div className="p-3 gap-4 flex-wrap flex w-full flex-1 justify-center">
-      {posts.map(post=>(<Post key={crypto.randomUUID()} writer={post.writer} content={post.content} postedOn={post.postedOn} />))}
+      {posts.map(({id,writer,content,postedOn}) => (
+        <Post
+          key={id}
+          writer={writer}
+          content={content}
+          postedOn={postedOn}
+          handleSubmitClick={handleShowComments}
+        />
+      ))}
     </div>
   );
 }
