@@ -6,10 +6,11 @@ const INI_STATE = { writer: "", content: "" };
 
 export default function CreateComment({
   img = getImage(),
+  postID = "",
   defaultName = generateName(),
   onSubmit = (state) => {},
 }) {
-  const handleSubmit = (state) => {
+  const handleSubmit = (state, postID) => {
     onSubmit({
       ...state,
       writer: !state.writer || state.writer === "" ? defaultName : state.writer,
@@ -18,14 +19,14 @@ export default function CreateComment({
         !state.content || state.content === ""
           ? "Just an empty comment!"
           : state.content,
-    });
+    }, postID);
   };
   const [state, setState] = useState(INI_STATE);
   useEffect(() => {
     const keyDownHandler = (event) => {
       if (event.key === "Enter") {
         event.preventDefault();
-        handleSubmit(state);
+        handleSubmit(state, postID);
       }
     };
     document.addEventListener("keydown", keyDownHandler);
@@ -54,7 +55,7 @@ export default function CreateComment({
           />
           <button
             onClick={() => {
-              handleSubmit(state);
+              handleSubmit(state, postID);
             }}
             className="text-sm font-semibold text-lightblue text-right"
           >

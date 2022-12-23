@@ -11,6 +11,7 @@ export default function CommentsModal({
   defaultImage = getImage(),
   isLoading = false,
   showModal  = false,
+  postID = "",
   comments = [
     {
       content: "Bahbik y nono!!",
@@ -75,6 +76,7 @@ export default function CommentsModal({
           ))}
         </div>
         <CreateComment
+          postID={postID}
           defaultName={defaultName}
           img={defaultImage}
           onSubmit={handleCommentCreate}

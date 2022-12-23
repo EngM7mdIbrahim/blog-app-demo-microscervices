@@ -21,6 +21,7 @@ const App = () => {
     ],
     isPosting: false,
     isGettingPosts: true,
+    isGettingComments: false,
     defaultName: generateName(),
     defaultImage: getImage(),
     //Modal Control
@@ -41,7 +42,10 @@ const App = () => {
   const handlePostingPost = async (content) => {
     setState((state) => ({ ...state, isPosting: true }));
     await sleep(3000);
-    const response = await axios.post("http://localhost:4000/posts", {...content, img: getImage()});
+    const response = await axios.post("http://localhost:4000/posts", {
+      ...content,
+      img: getImage(),
+    });
     const postObj = await response.data;
     setState((state) => ({
       ...state,
@@ -59,9 +63,10 @@ const App = () => {
     });
   };
 
-  const handleCreateComment = (comment, postID) => {
+  const handleCreateComment = async (comment, postID) => {
     setState((state) => ({ ...state, isCommenting: true }));
-    // Logic here!
+    await sleep(3000);
+    const response = await axios.post(`http://localhost:4001/${postID}/comments/`)
     setState((state) => ({ ...state, isCommenting: false }));
   };
 
@@ -70,14 +75,15 @@ const App = () => {
   };
 
   useEffect(() => {
-    if(!state.isPosting){
+    if (!state.isPosting) {
       handleFecthingPosts();
     }
   }, [state.isPosting]);
   return (
     <div className="w-screen min-h-screen bg-midnightDark flex flex-col gap-4 justify-start items-center from-gray-50 text-white p-7">
       <CommentsModal
-        isLoading={state.isCommenting}
+        isLoading={state.isCommenting || state.isGettingComments}
+        postID={state.posts[state.postClicked].id}
         comments={state.posts[state.postClicked].comments}
         showModal={state.showModal}
         handleHideComments={handleHideComments}
