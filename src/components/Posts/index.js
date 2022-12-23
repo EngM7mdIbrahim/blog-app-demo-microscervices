@@ -20,13 +20,14 @@ function Posts({
     loadingComponent()
   ) : (
     <div className="p-3 gap-4 flex-wrap flex w-full flex-1 justify-center">
-      {posts.map(({id,writer,content,postedOn}) => (
+      {posts.map(({id,writer,content,postedOn, img}) => (
         <Post
           key={id}
           writer={writer}
           content={content}
           postedOn={postedOn}
           handleSubmitClick={handleShowComments}
+          img={img}
         />
       ))}
     </div>

@@ -5,6 +5,8 @@ import Posts from "./components/Posts";
 import "./index.css";
 import generateName from "./utils/nameGenerator";
 import getImage from "./utils/images";
+import sleep from "./utils/sleep";
+import axios from "axios";
 
 const App = () => {
   const [state, setState] = useState({
@@ -14,92 +16,38 @@ const App = () => {
         content: "Hello world!",
         comments: [],
         postedOn: new Date(),
-        id: crypto.randomUUID()
-      },
-      {
-        writer: "Mohamed Ibrahim",
-        content: "Hello world!",
-        comments: [],
-        postedOn: new Date(),
-        id: crypto.randomUUID()
-      },
-      {
-        writer: "Mohamed Ibrahim",
-        content: "Hello world!",
-        comments: [],
-        postedOn: new Date(),
-        id: crypto.randomUUID()
-      },
-      {
-        writer: "Mohamed Ibrahim",
-        content: "Hello world!",
-        comments: [],
-        postedOn: new Date(),
-        id: crypto.randomUUID()
-      },
-      {
-        writer: "Mohamed Ibrahim",
-        content: "Hello world!",
-        comments: [],
-        postedOn: new Date(),
-        id: crypto.randomUUID()
-      },
-      {
-        writer: "Mohamed Ibrahim",
-        content: "Hello world!",
-        comments: [],
-        postedOn: new Date(),
-        id: crypto.randomUUID()
-      },
-      {
-        writer: "Mohamed Ibrahim",
-        content: "Hello world!",
-        comments: [],
-        postedOn: new Date(),
-        id: crypto.randomUUID()
-      },
-      {
-        writer: "Mohamed Ibrahim",
-        content: "Hello world!",
-        comments: [],
-        postedOn: new Date(),
-        id: crypto.randomUUID()
-      },
-      {
-        writer: "Mohamed Ibrahim",
-        content: "Hello world!",
-        comments: [],
-        postedOn: new Date(),
-        id: crypto.randomUUID()
-      },
-      {
-        writer: "Mohamed Ibrahim",
-        content: "Hello world!",
-        comments: [],
-        postedOn: new Date(),
-        id: crypto.randomUUID()
+        id: crypto.randomUUID(),
       },
     ],
     isPosting: false,
-    isGettingPosts: false,
+    isGettingPosts: true,
     defaultName: generateName(),
     defaultImage: getImage(),
     //Modal Control
     postClicked: 0,
-    showModal: true,
+    showModal: false,
     isCommenting: false,
   });
 
-  const handleFecthingPosts = () => {
-    setState(state=>({...state,isGettingPosts: true}))
-    // Logic here!
-    setState(state=>({...state,isGettingPosts: false}))
+  const handleFecthingPosts = async () => {
+    setState((state) => ({ ...state, isGettingPosts: true }));
+    await sleep(3000);
+    const response = await axios.get("http://localhost:4000/posts");
+    const postsObj = await response.data;
+    const posts = Object.values(postsObj);
+    setState((state) => ({ ...state, isGettingPosts: false, posts }));
   };
 
-  const handlePostingPost = (content) => {
-    setState(state=>({...state,isPosting: true}))
-    // Logic here!
-    setState(state=>({...state,isPosting: false}))
+  const handlePostingPost = async (content) => {
+    setState((state) => ({ ...state, isPosting: true }));
+    await sleep(3000);
+    const response = await axios.post("http://localhost:4000/posts", {...content, img: getImage()});
+    const postObj = await response.data;
+    setState((state) => ({
+      ...state,
+      isPosting: false,
+      posts: [...state.posts, postObj],
+    }));
   };
 
   const handleShowComments = (postID) => {
@@ -112,9 +60,9 @@ const App = () => {
   };
 
   const handleCreateComment = (comment, postID) => {
-    setState(state=>({...state,isCommenting: true}))
+    setState((state) => ({ ...state, isCommenting: true }));
     // Logic here!
-    setState(state=>({...state,isCommenting: false}))
+    setState((state) => ({ ...state, isCommenting: false }));
   };
 
   const handleHideComments = () => {
@@ -122,7 +70,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (!state.isPosting) {
+    if(!state.isPosting){
       handleFecthingPosts();
     }
   }, [state.isPosting]);
@@ -142,7 +90,11 @@ const App = () => {
       <h1 className="text-slate-900 font-extrabold text-4xl  sm:text-5xl lg:text-6xl tracking-tight text-center dark:text-white">
         Global Billboard
       </h1>
-      <Posts posts={state.posts} isLoading={state.isGettingPosts} handleShowComments={handleShowComments} />
+      <Posts
+        posts={state.posts}
+        isLoading={state.isGettingPosts}
+        handleShowComments={handleShowComments}
+      />
     </div>
   );
 };

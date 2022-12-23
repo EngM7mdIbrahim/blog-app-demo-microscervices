@@ -2,22 +2,23 @@ import React from "react";
 import Card from "../Card";
 
 import timeAgo from "../../utils/date";
-import getImage from "../../utils/images";
 
 function Post({
   writer,
   postedOn,
   content,
   id,
+  img,
   handleSubmitClick = (id) => {},
 }) {
+  console.log('Image: ', img)
   return (
     <Card style={{ minHeight: "24rem" }}>
       <div
         id="post-title"
         className="flex gap-4 h-16 justify-start items-center"
       >
-        <img src={getImage()} className="h-14 w-14 rounded-full object-cover" />
+        <img src={img} className="h-14 w-14 rounded-full object-cover" />
         <h2 className="text-slate-900 font-bold text-3xl">{writer}</h2>
       </div>
 

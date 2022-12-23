@@ -7,6 +7,6 @@ const images = {
   6: "avatat_3.png",
 };
 
-export default () => {
+export default function getImage() {
   return `images/${images[Math.floor(Math.random() * (6 - 1 + 1)) + 1]}`;
 };
