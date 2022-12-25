@@ -5,10 +5,12 @@ const EVENTS = {
   COMMENT_CREATED: "CommentCreated",
 };
 
+const CONFIRM_RES = constructEvent('ConfirmMessage', {})
+
 const SERVICES = {
   POSTS: 4000,
   COMMENTS: 4001,
-
+  QUERY: 4002,
   EVENTS: 4005,
 };
 function getHost(port) {
@@ -16,7 +18,7 @@ function getHost(port) {
 }
 
 function constructEvent(type, data) {
-  return { type, date };
+  return { type, data };
 }
 
-module.exports = { SERVICES, getHost, constructEvent, EVENTS };
+module.exports = { SERVICES, getHost, constructEvent, EVENTS, CONFIRM_RES };
