@@ -15,7 +15,6 @@ function Posts({
   isLoading = true,
   handleShowComments = (id) => {},
 }) {
-  console.log("Posts:", posts);
   return isLoading ? (
     loadingComponent()
   ) : (
@@ -28,6 +27,7 @@ function Posts({
           postedOn={postedOn}
           handleSubmitClick={handleShowComments}
           img={img}
+          id={id}
         />
       ))}
     </div>

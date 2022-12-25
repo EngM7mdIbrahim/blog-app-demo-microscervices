@@ -2,7 +2,7 @@ const express = require("express");
 const crypto = require("crypto");
 const cors = require("cors");
 const axios = require("axios");
-const { SERVICES, getHost, constructEvent, EVENTS } = require("../constants");
+const { SERVICES, getHost, constructEvent, EVENTS, CONFIRM_RES } = require("../constants");
 const app = express();
 
 app.use(express.json());
@@ -32,10 +32,23 @@ app.post("/posts", async (req, res) => {
     postedOn,
     img,
   };
-  await axios(getHost(SERVICES.EVENTS), constructEvent(EVENTS.POST_CREATED, posts[id]));
+  console.log("Received a post creation request:", posts[id]);
+  try {
+    await axios.post(
+      getHost(SERVICES.EVENTS)+'/events/',
+      constructEvent(EVENTS.POST_CREATED, posts[id])
+    );
+  } catch (e) {
+    console.log('Error has occurred', e)
+  }
+
   res.status(201).send(posts[id]);
 });
 
-app.listen(SERVICES.POSTS, ()=>{
-  console.log(`Posts Service listenning on port ${SERVICES.POSTS} ...`)
+app.post('/events', (_,res)=>{
+  res.send(CONFIRM_RES);
 })
+
+app.listen(SERVICES.POSTS, () => {
+  console.log(`Posts Service listenning on port ${SERVICES.POSTS} ...`);
+});

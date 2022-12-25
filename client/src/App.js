@@ -34,9 +34,10 @@ const App = () => {
     setState((state) => ({ ...state, isGettingPosts: true }));
     await sleep(3000);
     try {
-      const response = await axios.get("http://localhost:4000/posts");
+      const response = await axios.get("http://localhost:4002/posts");
       const postsObj = await response.data;
       const posts = Object.values(postsObj);
+      console.log('fETCHED pOSTS:',posts)
       setState((state) => ({ ...state, isGettingPosts: false, posts }));
     } catch (e) {
       console.log("Cannot get posts due to this error:", e);
@@ -46,11 +47,13 @@ const App = () => {
 
   const handlePostingPost = async (content) => {
     setState((state) => ({ ...state, isPosting: true }));
+    console.log("Post to be posted:", content);
     await sleep(3000);
     try {
       const response = await axios.post("http://localhost:4000/posts", {
         ...content,
-        img: getImage(),
+        img: state.defaultImage,
+        writer: content.writer || state.defaultName,
       });
       const postObj = await response.data;
 
@@ -69,11 +72,14 @@ const App = () => {
   };
 
   const handleShowComments = (postID) => {
-    setState({
+    console.log('Posts:', state.posts)
+    const postIndex = state.posts.findIndex((post) => post.id === postID);
+    console.log('PostIndex:', postIndex)
+    console.log('PostID:', postID)
+    setState({ 
       ...state,
       showModal: true,
-      postClicked:
-        state.posts.indexOf(postID) === -1 ? 0 : state.posts.indexOf(postID),
+      postClicked: postIndex === -1 ? 0 : postIndex,
     });
   };
 
@@ -81,7 +87,7 @@ const App = () => {
     setState((state) => ({ ...state, isCommenting: true }));
     await sleep(3000);
     try {
-      await axios.post(`http://localhost:4001/${postID}/comments/`, comment);
+      await axios.post(`http://localhost:4001/posts/${postID}/comments/`, comment);
     } catch (e) {
       console.log("Cannot comment due this error:", e);
     }
