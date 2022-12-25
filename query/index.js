@@ -34,10 +34,13 @@ app.post("/events", (req, res) => {
   const event = req.body;
   try {
     EVENS_HANDLER[event.type](event, res);
+    console.log('Current posts Obj:', posts)
+    res.send(CONFIRM_RES);
   } catch (e) {
     console.log('Error occurre:',e)
     res.send(CONFIRM_RES);
   }
+ 
 });
 
 app.get("/posts", (_, res) => {
@@ -49,7 +52,7 @@ app.listen(SERVICES.QUERY, () => {
 });
 
 //Event Handlers
-function handleCommentEvent(event, res) {
+function handleCommentEvent(event) {
   console.log(`Recieved ${event.type} event`);
   const { data } = event;
   const { postID, content, writer, postedOn } = data;
@@ -57,10 +60,9 @@ function handleCommentEvent(event, res) {
   const comments = posts[postID].comments;
   comments.push({ content, writer, postedOn });
   console.log("Current Posts Obj: ", posts);
-  res.send(CONFIRM_RES);
 }
 
-function handlePostEvent(event, res) {
+function handlePostEvent(event) {
   console.log(`Recieved ${event.type} event`);
   const { data } = event;
   const { id, writer, content, postedOn, img } = data;
@@ -73,5 +75,5 @@ function handlePostEvent(event, res) {
     comments: [],
   };
   console.log("Current Posts Obj: ", posts);
-  res.send(CONFIRM_RES);
+ 
 }
