@@ -33,25 +33,39 @@ const App = () => {
   const handleFecthingPosts = async () => {
     setState((state) => ({ ...state, isGettingPosts: true }));
     await sleep(3000);
-    const response = await axios.get("http://localhost:4000/posts");
-    const postsObj = await response.data;
-    const posts = Object.values(postsObj);
-    setState((state) => ({ ...state, isGettingPosts: false, posts }));
+    try {
+      const response = await axios.get("http://localhost:4000/posts");
+      const postsObj = await response.data;
+      const posts = Object.values(postsObj);
+      setState((state) => ({ ...state, isGettingPosts: false, posts }));
+    } catch (e) {
+      console.log("Cannot get posts due to this error:", e);
+      setState((state) => ({ ...state, isGettingPosts: false }));
+    }
   };
 
   const handlePostingPost = async (content) => {
     setState((state) => ({ ...state, isPosting: true }));
     await sleep(3000);
-    const response = await axios.post("http://localhost:4000/posts", {
-      ...content,
-      img: getImage(),
-    });
-    const postObj = await response.data;
-    setState((state) => ({
-      ...state,
-      isPosting: false,
-      posts: [...state.posts, postObj],
-    }));
+    try {
+      const response = await axios.post("http://localhost:4000/posts", {
+        ...content,
+        img: getImage(),
+      });
+      const postObj = await response.data;
+
+      setState((state) => ({
+        ...state,
+        isPosting: false,
+        posts: [...state.posts, postObj],
+      }));
+    } catch (e) {
+      console.log("Cannot post due to this error:", e);
+      setState((state) => ({
+        ...state,
+        isPosting: false,
+      }));
+    }
   };
 
   const handleShowComments = (postID) => {
@@ -66,7 +80,12 @@ const App = () => {
   const handleCreateComment = async (comment, postID) => {
     setState((state) => ({ ...state, isCommenting: true }));
     await sleep(3000);
-    const response = await axios.post(`http://localhost:4001/${postID}/comments/`)
+    try {
+      await axios.post(`http://localhost:4001/${postID}/comments/`, comment);
+    } catch (e) {
+      console.log("Cannot comment due this error:", e);
+    }
+    console.log("Commented!");
     setState((state) => ({ ...state, isCommenting: false }));
   };
 
@@ -87,6 +106,7 @@ const App = () => {
         comments={state.posts[state.postClicked].comments}
         showModal={state.showModal}
         handleHideComments={handleHideComments}
+        handleCommentCreate={handleCreateComment}
       />
       <h1 className="text-slate-900 font-extrabold text-4xl  sm:text-5xl lg:text-6xl tracking-tight text-center dark:text-white">
         Speak to the world!

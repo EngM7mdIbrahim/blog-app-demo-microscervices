@@ -39,7 +39,7 @@ export default function CommentsModal({
       postedOn: new Date(),
     },
   ],
-  handleCommentCreate = (comment) => {},
+  handleCommentCreate = (comment, postID) => {},
   handleHideComments = ()=>{}
 }) {
   return (

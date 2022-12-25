@@ -35,14 +35,14 @@ function Post({
       </div>
 
       <div id="post-footer" className="flex justify-start">
-        {/* <button
+        <button
           onClick={() => {
             handleSubmitClick(id);
           }}
           className="text-lightblue text-left text-base font-semibold flex-1 hover:text-white transition-all"
         >
           Show comments
-        </button> */}
+        </button>
         <p className="text-base">Posted {timeAgo(postedOn)}</p>
       </div>
     </Card>
