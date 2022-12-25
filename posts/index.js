@@ -36,6 +36,6 @@ app.post("/posts", async (req, res) => {
   res.status(201).send(posts[id]);
 });
 
-app.listen(4000, () => {
-  console.log("Posts Service listenning on 4000 ...");
-});
+app.listen(SERVICES.POSTS, ()=>{
+  console.log(`Posts Service listenning on port ${SERVICES.POSTS} ...`)
+})

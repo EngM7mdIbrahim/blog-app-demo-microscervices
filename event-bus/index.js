@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const { getHost, SERVICES } = require('../constants')
+const { getHost, SERVICES, CONFIRM_RES } = require('../constants')
 
 
 const app = express();
@@ -14,9 +14,12 @@ app.post("/events",async  (req, res) => {
 
   await axios.post(getHost(SERVICES.POSTS)+'/events', event);
   await axios.post(getHost(SERVICES.COMMENTS)+'/events', event);
+  await axios.post(getHost(SERVICES.QUERY)+'/events', event);
+
+  res.send(CONFIRM_RES)
 });
 
 
-app.listen(4005, (req, res)=>{
-  console.log('Events listenning on 4005 ...')
+app.listen(SERVICES.EVENTS, ()=>{
+  console.log(`Events Service listenning on port ${SERVICES.EVENTS} ...`)
 })
