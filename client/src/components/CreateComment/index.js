@@ -12,7 +12,6 @@ export default function CreateComment({
 }) {
   const handleSubmit = (state, postID) => {
     onSubmit({
-      ...state,
       writer: !state.writer || state.writer === "" ? defaultName : state.writer,
       postedOn: new Date(),
       content:
