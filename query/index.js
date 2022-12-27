@@ -33,8 +33,8 @@ app.use(cors());
 app.post("/events", (req, res) => {
   const event = req.body;
   try {
-    EVENS_HANDLER[event.type](event, res);
-    console.log('Current posts Obj:', posts)
+    EVENS_HANDLER[event.type](event);
+    console.log("Current Posts Obj: ", JSON.stringify(posts));
     res.send(CONFIRM_RES);
   } catch (e) {
     console.log('Error occurre:',e)
@@ -53,13 +53,14 @@ app.listen(SERVICES.QUERY, () => {
 
 //Event Handlers
 function handleCommentEvent(event) {
-  console.log(`Recieved ${event.type} event`);
+  console.log()
+  console.log(`Recieved ${event.type} event:`, JSON.stringify(event));
+  console.log()
   const { data } = event;
   const { postID, content, writer, postedOn } = data;
-  console.log("Post ID:", postID);
   const comments = posts[postID].comments;
   comments.push({ content, writer, postedOn });
-  console.log("Current Posts Obj: ", posts);
+
 }
 
 function handlePostEvent(event) {
@@ -74,6 +75,4 @@ function handlePostEvent(event) {
     img,
     comments: [],
   };
-  console.log("Current Posts Obj: ", posts);
- 
 }

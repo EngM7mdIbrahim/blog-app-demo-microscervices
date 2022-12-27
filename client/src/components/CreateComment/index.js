@@ -4,39 +4,42 @@ import generateName from "../../utils/nameGenerator";
 
 const INI_STATE = { writer: "", content: "" };
 
+function handleSubmit(onSubmit=()=>{}, state, postID, defaultName){
+  console.log('State: ', state)
+  onSubmit({
+    writer: !state.writer || state.writer === "" ? defaultName : state.writer,
+    postedOn: new Date(),
+    content:
+      !state.content || state.content === ""
+        ? "Just an empty comment!"
+        : state.content,
+  }, postID);
+}
+
 export default function CreateComment({
   img = getImage(),
   postID = "",
   defaultName = generateName(),
+  isModalShown = false,
   onSubmit = (state) => {},
 }) {
-  const handleSubmit = (state, postID) => {
-    onSubmit({
-      writer: !state.writer || state.writer === "" ? defaultName : state.writer,
-      postedOn: new Date(),
-      content:
-        !state.content || state.content === ""
-          ? "Just an empty comment!"
-          : state.content,
-    }, postID);
-  };
   const [state, setState] = useState(INI_STATE);
+  
   useEffect(() => {
     const keyDownHandler = (event) => {
-      if (event.key === "Enter") {
+      if (event.key === "Enter" && isModalShown) {
         event.preventDefault();
-        handleSubmit(state, postID);
+        handleSubmit(onSubmit, state, postID, defaultName);
       }
     };
     document.addEventListener("keydown", keyDownHandler);
     return () => {
       document.removeEventListener("keydown", keyDownHandler);
     };
-  }, []);
-
+  }, [postID,state, isModalShown, defaultName, onSubmit]);
   return (
     <div className=" flex flex-row gap-2 justify-start items-start self-stretch">
-      <img src={img} className="h-10 w-10 rounded-full object-cover" />
+      <img src={img} alt="User" className="h-10 w-10 rounded-full object-cover" />
       <div
         style={{ minHeight: "5rem" }}
         className="rounded-2xl bg-midnightDark py-2 px-4 flex flex-col justify-start items-start flex-1 overflow-auto gap-0"
