@@ -79,6 +79,7 @@ export default function CommentsModal({
           postID={postID}
           defaultName={defaultName}
           img={defaultImage}
+          isModalShown={showModal}
           onSubmit={handleCommentCreate}
         />
       </Card>

@@ -47,7 +47,6 @@ const App = () => {
 
   const handlePostingPost = async (content) => {
     setState((state) => ({ ...state, isPosting: true }));
-    console.log("Post to be posted:", content);
     await sleep(3000);
     try {
       const response = await axios.post("http://localhost:4000/posts", {
@@ -72,10 +71,7 @@ const App = () => {
   };
 
   const handleShowComments = (postID) => {
-    console.log('Posts:', state.posts)
     const postIndex = state.posts.findIndex((post) => post.id === postID);
-    console.log('PostIndex:', postIndex)
-    console.log('PostID:', postID)
     setState({ 
       ...state,
       showModal: true,
@@ -86,6 +82,8 @@ const App = () => {
   const handleCreateComment = async (comment, postID) => {
     setState((state) => ({ ...state, isCommenting: true }));
     await sleep(3000);
+    console.log('Will create a post for this:', postID)
+    console.log('The comment is:', comment)
     try {
       await axios.post(`http://localhost:4001/posts/${postID}/comments/`, comment);
     } catch (e) {

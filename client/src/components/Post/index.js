@@ -11,7 +11,6 @@ function Post({
   img,
   handleSubmitClick = (id) => {},
 }) {
-  console.log('Image: ', img)
   return (
     <Card style={{ minHeight: "24rem" }}>
       <div
