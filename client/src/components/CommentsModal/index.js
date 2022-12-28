@@ -3,13 +3,14 @@ import generateName from "../../utils/nameGenerator";
 import getImage from "../../utils/images";
 
 import Card from "../Card";
-import Comment from "../Comment";
+import Comment, { CommentLoading } from "../Comment";
 import CreateComment from "../CreateComment";
 
 export default function CommentsModal({
   defaultName = generateName(),
   defaultImage = getImage(),
-  isLoading = false,
+  isCommenting = false,
+  isGettingComments = false,
   showModal = false,
   postID = "",
   comments = [
@@ -52,7 +53,7 @@ export default function CommentsModal({
     >
       <Card
         style={{ height: "30rem" }}
-        className={`${isLoading ? "posts-loading" : ""} max-w-4xl`}
+        className={`${isCommenting ? "posts-loading" : ""} max-w-4xl`}
       >
         <div className="flex gap-1 justify-start items-center">
           <h1 className="text-slate-900 flex-1 font-extrabold text-4xl  tracking-tight text-left dark:text-white">
@@ -75,12 +76,15 @@ export default function CommentsModal({
               No comments yet for this post!
             </h1>
           )}
-          {comments.map(({ content, postedOn, writer }) => (
+          {isGettingComments ? 
+            ['x','x','x','x','x','x'].map((_)=>(<CommentLoading />))
+          : comments.map(({ content, postedOn, writer, img }) => (
             <Comment
               key={crypto.randomUUID()}
               content={content}
               postedOn={postedOn}
               writer={writer}
+              img={img}
             />
           ))}
         </div>

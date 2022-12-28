@@ -29,8 +29,8 @@ app.post("/posts/:id/comments", async (req, res) => {
   const postID = req.params.id;
   console.log('Recieved a comment creation request for the post:', postID)
   const comments = commentsByPostID[postID] || [];
-  const { content, writer, postedOn } = req.body;
-  const comment = { content, writer, postedOn }
+  const { content, writer, postedOn, img } = req.body;
+  const comment = { content, writer, postedOn, img }
   comments.push({ id: crypto.randomUUID(), ...comment });
   commentsByPostID[postID] = comments;
   console.log('Comment is:', commentsByPostID[postID]);
