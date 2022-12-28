@@ -27,7 +27,7 @@ export default function ErrorModal({
         <hr className="border-white w-full" />
         <div className="flex w-full flex-1 items-center justify-center">
           <h1 className="flex-1 font-semibold text-4xl  text-center  tracking-tight dark:text-white">
-            Error
+            {error}
           </h1>
         </div>
       </Card>

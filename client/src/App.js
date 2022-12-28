@@ -128,6 +128,9 @@ const App = () => {
     setState((state) => ({ ...state, error: "" }));
   };
 
+  useEffect(()=>{
+    handleFecthingData(true)
+  },[])
   return (
     <div className="w-screen min-h-screen bg-midnightDark flex flex-col gap-4 justify-start items-center from-gray-50 text-white p-7">
       <ErrorModal error={state.error} handleHideError={handleHideError} />

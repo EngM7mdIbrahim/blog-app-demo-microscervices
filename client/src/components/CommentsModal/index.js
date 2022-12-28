@@ -78,13 +78,14 @@ export default function CommentsModal({
           )}
           {isGettingComments ? 
             ['x','x','x','x','x','x'].map((_)=>(<CommentLoading />))
-          : comments.map(({ content, postedOn, writer, img }) => (
+          : comments.map(({ content, postedOn, writer, img, status }) => (
             <Comment
               key={crypto.randomUUID()}
               content={content}
               postedOn={postedOn}
               writer={writer}
               img={img}
+              status={status}
             />
           ))}
         </div>

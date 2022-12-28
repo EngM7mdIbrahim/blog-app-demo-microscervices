@@ -22,7 +22,8 @@ const posts = {
 
 const EVENS_HANDLER = {
   [EVENTS.POST_CREATED]: handlePostEvent,
-  [EVENTS.COMMENT_CREATED]: handleCommentEvent,
+  [EVENTS.COMMENT_CREATED]: handleCreateCommentEvent,
+  [EVENTS.COMMENT_UPDATED]: handleUpdateCommentEvent,
 };
 
 const app = express();
@@ -30,11 +31,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
 app.post("/events", (req, res) => {
   const event = req.body;
   try {
-    EVENS_HANDLER[event.type](event);
-    console.log("Current Posts Obj: ", JSON.stringify(posts));
+    handleEvent(event)
     res.send(CONFIRM_RES);
   } catch (e) {
     console.log("Error occurre:", e);
@@ -46,19 +47,35 @@ app.get("/posts", (_, res) => {
   res.send(posts);
 });
 
-app.listen(SERVICES.QUERY, () => {
+app.listen(SERVICES.QUERY, async () => {
   console.log(`Query Service listenning on port ${SERVICES.QUERY} ...`);
+  console.log('Checking for any missed events ...')
+  const res = await axios.get(getHost(SERVICES.EVENTS)+'/events');
+  const events = res.data;
+  events.forEach(event =>{
+    console.log('Processing Event:', event.type);
+    handleEvent(event);
+  })
+  console.log('Syncing Events is complete.')
 });
 
 //Event Handlers
-function handleCommentEvent(event) {
+function handleEvent(event){
+  const eventHandlerFunction = EVENS_HANDLER[event.type];
+  if (eventHandlerFunction) {
+    EVENS_HANDLER[event.type](event);
+    console.log("Current Posts Obj: ", JSON.stringify(posts));
+  }
+}
+function handleCreateCommentEvent(event) {
   console.log();
   console.log(`Recieved ${event.type} event:`, JSON.stringify(event));
   console.log();
   const { data } = event;
-  const { postID, content, writer, postedOn, img } = data;
+  const { postID} = data;
+  const comment = {...data, postID: undefined}
   const comments = posts[postID].comments;
-  comments.push({ content, writer, postedOn, img });
+  comments.push(comment);
   console.log();
   console.log("Current comments:", comments);
   console.log();
@@ -76,4 +93,38 @@ function handlePostEvent(event) {
     img,
     comments: [],
   };
+}
+
+function handleUpdateCommentEvent(event) {
+  console.log();
+  console.log(`Recieved ${event.type} event:`, JSON.stringify(event));
+  console.log();
+  const { data } = event;
+  const { postID, id} = data;
+  const comment = {...data, postID: undefined}
+  const post = posts[postID];
+  if (post === undefined) {
+    console.error(
+      "Cannot find the post for the sent comment event. PostID:",
+      postID,
+      "and the posts database:",
+      JSON.stringify(posts)
+    );
+    return;
+  }
+  const comments = post.comments;
+  const commentIndex = comments.findIndex((comment) => comment.id === id);
+  if (commentIndex === -1) {
+    console.error(
+      "Cannot find the sent comment event. CommentID:",
+      id,
+      "and the comments for this post:",
+      JSON.stringify(comments)
+    );
+    return;
+  }
+  comments[commentIndex] = comment;
+  console.log();
+  console.log("Current comments:", comments);
+  console.log();
 }
