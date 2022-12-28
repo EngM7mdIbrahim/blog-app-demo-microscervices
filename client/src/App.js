@@ -21,7 +21,7 @@ const App = () => {
       },
     ],
     isPosting: false,
-    isGettingPosts: true,
+    isGettingPosts: false,
     isGettingComments: false,
     defaultName: generateName(),
     defaultImage: getImage(),
@@ -32,18 +32,30 @@ const App = () => {
     error: "",
   });
 
-  const handleFecthingPosts = async () => {
-    setState((state) => ({ ...state, isGettingPosts: true }));
+  const handleFecthingData = async (isPosts) => {
+    const key = isPosts ? "isGettingPosts" : "isGettingComments";
+    setState((state) => ({
+      ...state,
+      [key]: true,
+    }));
     await sleep(3000);
     try {
       const response = await axios.get("http://localhost:4002/posts");
       const postsObj = await response.data;
       const posts = Object.values(postsObj);
       console.log("fETCHED pOSTS:", posts);
-      setState((state) => ({ ...state, isGettingPosts: false, posts }));
+      setState((state) => ({
+        ...state,
+        [key]: false,
+        posts,
+      }));
     } catch (e) {
       console.log("Cannot get posts due to this error:", e);
-      setState((state) => ({ ...state, isGettingPosts: false, error: "Cannot get posts due to this error:"+JSON.stringify(e) }));
+      setState((state) => ({
+        ...state,
+        [key]: false,
+        error: "Cannot get posts due to this error:" + JSON.stringify(e),
+      }));
     }
   };
 
@@ -63,12 +75,13 @@ const App = () => {
         isPosting: false,
         posts: [...state.posts, postObj],
       }));
+      handleFecthingData(true);
     } catch (e) {
       console.log("Cannot post due to this error:", e);
       setState((state) => ({
         ...state,
         isPosting: false,
-        error: "Cannot get posts due to this error:"+JSON.stringify(e)
+        error: "Cannot get posts due to this error:" + JSON.stringify(e),
       }));
     }
   };
@@ -92,9 +105,13 @@ const App = () => {
         `http://localhost:4001/posts/${postID}/comments/`,
         comment
       );
+      handleFecthingData(false);
     } catch (e) {
       console.log("Cannot comment due this error:", e);
-      setState(state=>({...state, error: "Cannot get posts due to this error:"+JSON.stringify(e)}))
+      setState((state) => ({
+        ...state,
+        error: "Cannot get posts due to this error:" + JSON.stringify(e),
+      }));
     }
     console.log("Commented!");
     setState((state) => ({ ...state, isCommenting: false }));
@@ -111,17 +128,15 @@ const App = () => {
     setState((state) => ({ ...state, error: "" }));
   };
 
-  useEffect(() => {
-    if (!state.isPosting) {
-      handleFecthingPosts();
-    }
-  }, [state.isPosting]);
   return (
     <div className="w-screen min-h-screen bg-midnightDark flex flex-col gap-4 justify-start items-center from-gray-50 text-white p-7">
       <ErrorModal error={state.error} handleHideError={handleHideError} />
       <CommentsModal
         handleSetError={handleSetError}
-        isLoading={state.isCommenting || state.isGettingComments}
+        defaultImage={state.defaultImage}
+        defaultName={state.defaultName}
+        isCommenting={state.isCommenting}
+        isGettingComments={state.isGettingComments}
         postID={state.posts[state.postClicked].id}
         comments={state.posts[state.postClicked].comments}
         showModal={state.showModal}

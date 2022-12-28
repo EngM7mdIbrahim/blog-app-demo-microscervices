@@ -56,9 +56,9 @@ function handleCommentEvent(event) {
   console.log(`Recieved ${event.type} event:`, JSON.stringify(event));
   console.log();
   const { data } = event;
-  const { postID, content, writer, postedOn } = data;
+  const { postID, content, writer, postedOn, img } = data;
   const comments = posts[postID].comments;
-  comments.push({ content, writer, postedOn });
+  comments.push({ content, writer, postedOn, img });
   console.log();
   console.log("Current comments:", comments);
   console.log();

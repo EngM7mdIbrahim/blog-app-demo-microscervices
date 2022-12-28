@@ -4,11 +4,12 @@ import generateName from "../../utils/nameGenerator";
 
 const INI_STATE = { writer: "", content: "" };
 
-function handleSubmit(onSubmit=()=>{}, state, postID, defaultName){
+function handleSubmit(onSubmit=()=>{}, state, postID, defaultName, image){
   console.log('State: ', state)
   onSubmit({
     writer: !state.writer || state.writer === "" ? defaultName : state.writer,
     postedOn: new Date(),
+    img: image,
     content:
       !state.content || state.content === ""
         ? "Just an empty comment!"
@@ -31,7 +32,7 @@ export default function CreateComment({
     const keyDownHandler = (event) => {
       if (event.key === "Enter" && isModalShown) {
         event.preventDefault();
-        handleSubmit(onSubmit, state, postID, defaultName);
+        handleSubmit(onSubmit, state, postID, defaultName, img);
       }
     };
     document.addEventListener("keydown", keyDownHandler);
@@ -59,7 +60,7 @@ export default function CreateComment({
           />
           <button
             onClick={() => {
-              handleSubmit(state, postID);
+              handleSubmit(onSubmit, state, postID, defaultName, img);
             }}
             className="text-sm font-semibold text-lightblue text-right"
           >
