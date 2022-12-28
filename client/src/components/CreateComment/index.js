@@ -13,7 +13,8 @@ function handleSubmit(onSubmit=()=>{}, state, postID, defaultName){
       !state.content || state.content === ""
         ? "Just an empty comment!"
         : state.content,
-  }, postID);
+  }, postID)
+  
 }
 
 export default function CreateComment({
@@ -22,6 +23,7 @@ export default function CreateComment({
   defaultName = generateName(),
   isModalShown = false,
   onSubmit = (state) => {},
+  handleSetError = () => {},
 }) {
   const [state, setState] = useState(INI_STATE);
   

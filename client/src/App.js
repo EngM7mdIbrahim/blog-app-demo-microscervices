@@ -7,6 +7,7 @@ import generateName from "./utils/nameGenerator";
 import getImage from "./utils/images";
 import sleep from "./utils/sleep";
 import axios from "axios";
+import ErrorModal from "./components/ErrorModal";
 
 const App = () => {
   const [state, setState] = useState({
@@ -28,6 +29,7 @@ const App = () => {
     postClicked: 0,
     showModal: false,
     isCommenting: false,
+    error: "",
   });
 
   const handleFecthingPosts = async () => {
@@ -37,7 +39,7 @@ const App = () => {
       const response = await axios.get("http://localhost:4002/posts");
       const postsObj = await response.data;
       const posts = Object.values(postsObj);
-      console.log('fETCHED pOSTS:',posts)
+      console.log("fETCHED pOSTS:", posts);
       setState((state) => ({ ...state, isGettingPosts: false, posts }));
     } catch (e) {
       console.log("Cannot get posts due to this error:", e);
@@ -72,7 +74,7 @@ const App = () => {
 
   const handleShowComments = (postID) => {
     const postIndex = state.posts.findIndex((post) => post.id === postID);
-    setState({ 
+    setState({
       ...state,
       showModal: true,
       postClicked: postIndex === -1 ? 0 : postIndex,
@@ -82,10 +84,13 @@ const App = () => {
   const handleCreateComment = async (comment, postID) => {
     setState((state) => ({ ...state, isCommenting: true }));
     await sleep(3000);
-    console.log('Will create a post for this:', postID)
-    console.log('The comment is:', comment)
+    console.log("Will create a post for this:", postID);
+    console.log("The comment is:", comment);
     try {
-      await axios.post(`http://localhost:4001/posts/${postID}/comments/`, comment);
+      await axios.post(
+        `http://localhost:4001/posts/${postID}/comments/`,
+        comment
+      );
     } catch (e) {
       console.log("Cannot comment due this error:", e);
     }
@@ -97,6 +102,13 @@ const App = () => {
     setState({ ...state, showModal: false });
   };
 
+  const handleHideError = () => {
+    setState((state) => ({ ...state, error: "" }));
+  };
+  const handleSetError = (error) => {
+    setState((state) => ({ ...state, error: "" }));
+  };
+
   useEffect(() => {
     if (!state.isPosting) {
       handleFecthingPosts();
@@ -104,7 +116,9 @@ const App = () => {
   }, [state.isPosting]);
   return (
     <div className="w-screen min-h-screen bg-midnightDark flex flex-col gap-4 justify-start items-center from-gray-50 text-white p-7">
+      <ErrorModal error={state.error} handleHideError={handleHideError} />
       <CommentsModal
+        handleSetError={handleSetError}
         isLoading={state.isCommenting || state.isGettingComments}
         postID={state.posts[state.postClicked].id}
         comments={state.posts[state.postClicked].comments}
@@ -115,12 +129,17 @@ const App = () => {
       <h1 className="text-slate-900 font-extrabold text-4xl  sm:text-5xl lg:text-6xl tracking-tight text-center dark:text-white">
         Speak to the world!
       </h1>
-      <CreatePost isLoading={state.isPosting} onSubmit={handlePostingPost} />
+      <CreatePost
+        handleSetError={handleSetError}
+        isLoading={state.isPosting}
+        onSubmit={handlePostingPost}
+      />
       <hr className=" bg-midnightLight w-full h-0.5" />
       <h1 className="text-slate-900 font-extrabold text-4xl  sm:text-5xl lg:text-6xl tracking-tight text-center dark:text-white">
         Global Billboard
       </h1>
       <Posts
+        handleSetError={handleSetError}
         posts={state.posts}
         isLoading={state.isGettingPosts}
         handleShowComments={handleShowComments}

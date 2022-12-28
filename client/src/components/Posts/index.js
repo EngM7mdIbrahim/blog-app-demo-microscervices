@@ -14,6 +14,7 @@ function Posts({
   posts = [],
   isLoading = true,
   handleShowComments = (id) => {},
+  handleSetError = () => {},
 }) {
   return isLoading ? (
     loadingComponent()
@@ -28,6 +29,7 @@ function Posts({
           handleSubmitClick={handleShowComments}
           img={img}
           id={id}
+          handleSetError = {handleSetError}
         />
       ))}
     </div>

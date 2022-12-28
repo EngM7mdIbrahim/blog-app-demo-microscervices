@@ -10,6 +10,7 @@ function Post({
   id,
   img,
   handleSubmitClick = (id) => {},
+  handleSetError = () => {},
 }) {
   return (
     <Card style={{ minHeight: "24rem" }}>
