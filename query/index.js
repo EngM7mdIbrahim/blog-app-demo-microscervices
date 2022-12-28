@@ -37,10 +37,9 @@ app.post("/events", (req, res) => {
     console.log("Current Posts Obj: ", JSON.stringify(posts));
     res.send(CONFIRM_RES);
   } catch (e) {
-    console.log('Error occurre:',e)
+    console.log("Error occurre:", e);
     res.send(CONFIRM_RES);
   }
- 
 });
 
 app.get("/posts", (_, res) => {
@@ -53,14 +52,16 @@ app.listen(SERVICES.QUERY, () => {
 
 //Event Handlers
 function handleCommentEvent(event) {
-  console.log()
+  console.log();
   console.log(`Recieved ${event.type} event:`, JSON.stringify(event));
-  console.log()
+  console.log();
   const { data } = event;
   const { postID, content, writer, postedOn } = data;
   const comments = posts[postID].comments;
   comments.push({ content, writer, postedOn });
-
+  console.log();
+  console.log("Current comments:", comments);
+  console.log();
 }
 
 function handlePostEvent(event) {
