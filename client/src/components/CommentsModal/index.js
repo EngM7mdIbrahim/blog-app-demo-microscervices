@@ -10,7 +10,7 @@ export default function CommentsModal({
   defaultName = generateName(),
   defaultImage = getImage(),
   isLoading = false,
-  showModal  = false,
+  showModal = false,
   postID = "",
   comments = [
     {
@@ -40,12 +40,15 @@ export default function CommentsModal({
     },
   ],
   handleCommentCreate = (comment, postID) => {},
-  handleHideComments = ()=>{}
+  handleHideComments = () => {},
+  handleSetError = () => {},
 }) {
   return (
     <div
       style={{ backdropFilter: "blur(5px)" }}
-      className={`fixed h-screen w-screen top-0 flex-col justify-center items-center opacity-0 flex ${showModal ? 'animate-fadeIn': 'animate-fadeOut'}`}
+      className={`fixed h-screen w-screen top-0 flex-col justify-center items-center opacity-0 flex ${
+        showModal ? "animate-fadeIn" : "animate-fadeOut"
+      }`}
     >
       <Card
         style={{ height: "30rem" }}
@@ -55,7 +58,13 @@ export default function CommentsModal({
           <h1 className="text-slate-900 flex-1 font-extrabold text-4xl  tracking-tight text-left dark:text-white">
             Comments
           </h1>
-          <img onClick={()=>{handleHideComments()}} src="/images/crossed.png" className="w-12 h-12 rounded-full p-2 object-cover hover:bg-gray-700 hover:shadow-lg transition-all cursor-pointer " />
+          <img
+            onClick={() => {
+              handleHideComments();
+            }}
+            src="/images/crossed.png"
+            className="w-12 h-12 rounded-full p-2 object-cover hover:bg-gray-700 hover:shadow-lg transition-all cursor-pointer "
+          />
         </div>
         <div
           id="comments-body"
@@ -77,6 +86,7 @@ export default function CommentsModal({
         </div>
         <CreateComment
           postID={postID}
+          handleSetError={handleSetError}
           defaultName={defaultName}
           img={defaultImage}
           isModalShown={showModal}
