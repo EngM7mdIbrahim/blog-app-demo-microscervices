@@ -43,7 +43,7 @@ const App = () => {
       setState((state) => ({ ...state, isGettingPosts: false, posts }));
     } catch (e) {
       console.log("Cannot get posts due to this error:", e);
-      setState((state) => ({ ...state, isGettingPosts: false }));
+      setState((state) => ({ ...state, isGettingPosts: false, error: "Cannot get posts due to this error:"+JSON.stringify(e) }));
     }
   };
 
@@ -68,6 +68,7 @@ const App = () => {
       setState((state) => ({
         ...state,
         isPosting: false,
+        error: "Cannot get posts due to this error:"+JSON.stringify(e)
       }));
     }
   };
@@ -93,6 +94,7 @@ const App = () => {
       );
     } catch (e) {
       console.log("Cannot comment due this error:", e);
+      setState(state=>({...state, error: "Cannot get posts due to this error:"+JSON.stringify(e)}))
     }
     console.log("Commented!");
     setState((state) => ({ ...state, isCommenting: false }));

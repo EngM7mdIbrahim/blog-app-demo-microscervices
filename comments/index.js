@@ -30,14 +30,15 @@ app.post("/posts/:id/comments", async (req, res) => {
   console.log('Recieved a comment creation request for the post:', postID)
   const comments = commentsByPostID[postID] || [];
   const { content, writer, postedOn } = req.body;
-  comments.push({ id: crypto.randomUUID(), content, writer, postedOn });
+  const comment = { content, writer, postedOn }
+  comments.push({ id: crypto.randomUUID(), ...comment });
   commentsByPostID[postID] = comments;
   console.log('Comment is:', commentsByPostID[postID]);
   try{
     await axios.post(
       getHost(SERVICES.EVENTS) + "/events/",
       constructEvent(EVENTS.COMMENT_CREATED, {
-        ...commentsByPostID[postID],
+        ...comment,
         postID,
       })
     );
