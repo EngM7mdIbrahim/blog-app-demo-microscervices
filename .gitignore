@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -30,3 +31,5 @@ yarn-error.log*
 ./posts/node_modules/
 ./query/node_modules/
 >>>>>>> 4eb9760 (firts commit)
+=======
+>>>>>>> 5709b3e (Updated App)

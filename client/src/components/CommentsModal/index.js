@@ -5,6 +5,7 @@ import getImage from "../../utils/images";
 import Card from "../Card";
 import Comment, { CommentLoading } from "../Comment";
 import CreateComment from "../CreateComment";
+import {v4} from 'uuid'
 
 export default function CommentsModal({
   defaultName = generateName(),
@@ -80,7 +81,7 @@ export default function CommentsModal({
             ['x','x','x','x','x','x'].map((_)=>(<CommentLoading />))
           : comments.map(({ content, postedOn, writer, img, status }) => (
             <Comment
-              key={crypto.randomUUID()}
+              key={v4()}
               content={content}
               postedOn={postedOn}
               writer={writer}
