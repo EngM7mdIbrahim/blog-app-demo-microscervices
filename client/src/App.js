@@ -8,6 +8,7 @@ import getImage from "./utils/images";
 import sleep from "./utils/sleep";
 import axios from "axios";
 import ErrorModal from "./components/ErrorModal";
+import {v4} from 'uuid'
 
 const App = () => {
   const [state, setState] = useState({
@@ -17,7 +18,7 @@ const App = () => {
         content: "Hello world!",
         comments: [],
         postedOn: new Date(),
-        id: crypto.randomUUID(),
+        id: v4(),
       },
     ],
     isPosting: false,
@@ -38,9 +39,8 @@ const App = () => {
       ...state,
       [key]: true,
     }));
-    await sleep(3000);
     try {
-      const response = await axios.get("http://localhost:4002/posts");
+      const response = await axios.get("http://posts.com/posts/");
       const postsObj = await response.data;
       const posts = Object.values(postsObj);
       console.log("fETCHED pOSTS:", posts);
@@ -61,9 +61,8 @@ const App = () => {
 
   const handlePostingPost = async (content) => {
     setState((state) => ({ ...state, isPosting: true }));
-    await sleep(3000);
     try {
-      const response = await axios.post("http://localhost:4000/posts", {
+      const response = await axios.post("http://posts.com/posts/create/", {
         ...content,
         img: state.defaultImage,
         writer: content.writer || state.defaultName,
@@ -97,12 +96,11 @@ const App = () => {
 
   const handleCreateComment = async (comment, postID) => {
     setState((state) => ({ ...state, isCommenting: true }));
-    await sleep(3000);
     console.log("Will create a post for this:", postID);
     console.log("The comment is:", comment);
     try {
       await axios.post(
-        `http://localhost:4001/posts/${postID}/comments/`,
+        `http://posts.com/posts/${postID}/comments/`,
         comment
       );
       handleFecthingData(false);

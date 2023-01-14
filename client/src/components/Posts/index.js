@@ -1,11 +1,12 @@
 import React from "react";
 import Card from "../Card";
 import Post from "../Post";
+import {v4} from 'uuid'
 
 const loadingComponent = () => (
   <div className="p-3 gap-4 flex-wrap flex w-full flex-1 justify-center">
     {["x", "x", "x", "x", "x", "x"].map((_) => (
-      <Card key={crypto.randomUUID()} className="h-96 posts-loading" />
+      <Card key={v4()} className="h-96 posts-loading" />
     ))}
   </div>
 );
